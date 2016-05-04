@@ -1,6 +1,6 @@
 # Routa
 
-A RESTful, flexible MVC router component for PHP 5.3+.  Declare rules which route HTTP requests to a controller.
+A RESTful, flexible MVC router component for PHP 5.4+.  Declare rules which route HTTP requests to a controller.
 
 ## Do we need another router?
 
