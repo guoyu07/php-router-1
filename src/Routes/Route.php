@@ -30,6 +30,10 @@ abstract class Route {
      */
     protected $_compiledUrl = '';
     /**
+     * @var string
+     */
+    protected $_method = '';
+    /**
      * Route parameters (if any)
      *
      * @var array
@@ -43,13 +47,14 @@ abstract class Route {
     protected $_tokens = [];
 
     /**
-     * Constructor
+     * Route constructor.
      *
-     * @author James Moss
+     * @param $method
      * @param $uri
      * @param $dispatchRule
      */
-    public function __construct($uri, $dispatchRule) {
+    public function __construct($method, $uri, $dispatchRule) {
+        $this->_method          = strtoupper($method);
         $this->_uri             = $uri;
         $this->_dispatchingRule = $dispatchRule;
         $this->_compile();
@@ -64,9 +69,10 @@ abstract class Route {
      */
     public function match(Request $request) {
         $uri = $request->getUri();
-        if ( $this->_uri === $uri || (count($this->_tokens) && $this->_parseParams($uri)) ) {
+        if ( $this->_method != $request->getMethod() )
+            return false;
+        if ( $this->_uri === $uri || (count($this->_tokens) && $this->_parseParams($uri)) )
             return true;
-        }
         return false;
     }
 

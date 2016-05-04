@@ -30,22 +30,19 @@ class Router {
      * @param        $uri
      * @param string $method
      */
-    public function __construct($uri, $method = '*') {
-        // Validate the method
-        if ( $method != '*' && ! $this->isValidHttpMethod($method) ) {
-            throw new \InvalidArgumentException('Invalid HTTP method: ' . $method);
-        }
+    public function __construct($uri, $method) {
         $this->_request = new Request($uri, $method);
     }
 
     /**
+     * @param      $method
      * @param      $route
      * @param null $action
      * @return $this
      */
-    public function add($route, $action = null) {
+    public function add($method, $route, $action = null) {
         if ( is_string($route) ) {
-            $route = new Routes\Basic($route, $action);
+            $route = new Routes\Basic($method, $route, $action);
         }
         $route->add($this->_routes);
         return $this;
