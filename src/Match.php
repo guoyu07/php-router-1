@@ -39,7 +39,11 @@ class Match {
      * @param Route $route
      */
     public function __construct($request, $route) {
-        list($this->_moduleName, $this->_controllerName, $this->_actionName) = explode($this->_delimiter, $route->getDispatchingRule());
+        $names = explode($this->_delimiter, $route->getDispatchingRule());
+        if (count($names) > 2)
+            list($this->_moduleName, $this->_controllerName, $this->_actionName) = $names;
+        else
+            list($this->_controllerName, $this->_actionName) = $names;
         $this->_params = $route->getParams();
     }
 

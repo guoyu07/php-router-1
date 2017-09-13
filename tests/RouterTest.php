@@ -29,7 +29,11 @@ class RouterTest extends PHPUnit_Framework_TestCase {
             ->add('GET', '/signup', 'v1#Account#signup')
             ->add('GET', '/login', 'v1#Account#login')
             ->add('GET', '/login/recover', 'v1#Account#recoverPassword')
-            ->add('GET', '/logout', 'v1#Account#logout');
+            ->add('GET', '/logout', 'v1#Account#logout')
+            ->add('GET', '/user/:id', 'v1#User#view')
+            ->add('POST','/user/:id/edit', 'v1#User#save')
+            ->add('GET', '/user/:id/edit', 'v1#User#edit')
+            ->add('GET', '/user/del', 'User#del');
         $this->assertInstanceOf('LancerHe\Router\Match', $result = $router->match());
         $this->assertEquals($result->getModuleName(), 'v1');
         $this->assertEquals($result->getControllerName(), 'Account');
@@ -43,14 +47,32 @@ class RouterTest extends PHPUnit_Framework_TestCase {
         $url    = '/user/233/edit';
         $router = new Router($url, 'POST');
         $router
+            ->add('GET', '/signup', 'v1#Account#signup')
+            ->add('GET', '/login', 'v1#Account#login')
+            ->add('GET', '/login/recover', 'v1#Account#recoverPassword')
+            ->add('GET', '/logout', 'v1#Account#logout')
             ->add('GET', '/user/:id', 'v1#User#view')
             ->add('POST','/user/:id/edit', 'v1#User#save')
-            ->add('GET', '/user/:id/edit', 'v1#User#edit');
+            ->add('GET', '/user/:id/edit', 'v1#User#edit')
+            ->add('GET', '/user/del', 'User#del');
         $result = $router->match();
+        $this->assertEquals($result->getModuleName(), 'v1');
         $this->assertEquals($result->getControllerName(), 'User');
         $this->assertEquals($result->getActionName(), 'save');
         $this->assertEquals($result->getParam('id'), '233');
     }
-}
 
-?>
+    /**
+     * @test
+     */
+    public function basic_route_without_module() {
+        $url    = '/user/del';
+        $router = new Router($url, 'GET');
+        $router
+            ->add('GET', '/user/del', 'User#del');
+        $result = $router->match();
+        $this->assertEquals($result->getModuleName(), '');
+        $this->assertEquals($result->getControllerName(), 'User');
+        $this->assertEquals($result->getActionName(), 'del');
+    }
+}
